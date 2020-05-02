@@ -33,31 +33,33 @@ const Country = ({match: {params: { slug }}}) => {
   const { setLoading } = React.useContext(LoadingContext);
 
   const fetchData = () => {
-    setLoading(true);
-    setError(false);
-    const allFetchPromises = [
-      getSummaryStats(),
-      getDayOneDataByCountry(slug, 'confirmed'),
-      getDayOneDataByCountry(slug, 'deaths'),
-      getDayOneDataByCountry(slug, 'recovered'),
-    ];
-
-    Promise.all(allFetchPromises)
-      .then(([summary, cases, deaths, recovered]) => {
-        setCountryStats(summary.Countries.find((i) => i.Slug.toLowerCase() === slug));
-        cases.forEach((c, i) => {
-          const date = new Date(c.Date);
-          c.Date = `${date.getDate()}/${date.getMonth() + 1}`;
-          cases[i].Deaths = deaths[i].Cases;
-          cases[i].Recovered = recovered[i].Cases;
+    if(slug!=='coronatracker'){
+      setLoading(true);
+      setError(false);
+      const allFetchPromises = [
+        getSummaryStats(),
+        getDayOneDataByCountry(slug, 'confirmed'),
+        getDayOneDataByCountry(slug, 'deaths'),
+        getDayOneDataByCountry(slug, 'recovered'),
+      ];
+  
+      Promise.all(allFetchPromises)
+        .then(([summary, cases, deaths, recovered]) => {
+          setCountryStats(summary.Countries.find((i) => i.Slug.toLowerCase() === slug));
+          cases.forEach((c, i) => {
+            const date = new Date(c.Date);
+            c.Date = `${date.getDate()}/${date.getMonth() + 1}`;
+            cases[i].Deaths = deaths[i].Cases;
+            cases[i].Recovered = recovered[i].Cases;
+          });
+  
+          setAllData(cases.length > 30 ? cases.splice(cases.length - 30) : cases);
+        })
+        .catch(() => setError(true))
+        .finally(() => {
+          setLoading(false);
         });
-
-        setAllData(cases.length > 30 ? cases.splice(cases.length - 30) : cases);
-      })
-      .catch(() => setError(true))
-      .finally(() => {
-        setLoading(false);
-      });
+    }
   }
 
   React.useEffect(() => {
