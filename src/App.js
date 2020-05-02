@@ -62,7 +62,6 @@ function App() {
   return (
     <React.Fragment>
       <Header />
-      <chat-widget></chat-widget>
       <LoadingContext.Provider value={value}>
         {loading ? <Spinner /> : null}
         <div className="container flex-grow-1">
@@ -70,6 +69,7 @@ function App() {
             render={() => {
               return (
                 <React.Fragment>
+                  <chat-widget></chat-widget>
                   {error ? <Error retryCallback={loadData} /> : null}
                   <Summary global={data.Global} lastUpdate={data.Date} />
                   <Countries countries={data.FilteredCountries} countryFilter={countryFilter} />
