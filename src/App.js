@@ -62,6 +62,7 @@ function App() {
   return (
     <React.Fragment>
       <Header />
+      <chat-widget></chat-widget>
       <LoadingContext.Provider value={value}>
         {loading ? <Spinner /> : null}
         <div className="container flex-grow-1">
