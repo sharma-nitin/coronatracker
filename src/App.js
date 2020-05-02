@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, withRouter } from 'react-router-dom';
+import { BrowserRouter,Switch ,Route, withRouter } from 'react-router-dom';
 import { getSummaryStats } from './api';
 import Countries from './components/Countries/Countries';
 import Country from './components/Country/Country';
@@ -12,7 +12,7 @@ import './main.scss';
 
 export const LoadingContext = React.createContext({
   loading: true,
-  setLoading: () => {},
+  setLoading: () => { },
 });
 
 function App() {
@@ -65,19 +65,26 @@ function App() {
       <LoadingContext.Provider value={value}>
         {loading ? <Spinner /> : null}
         <div className="container flex-grow-1">
-          <Route path="/" exact
-            render={() => {
-              return (
-                <React.Fragment>
-                  <chat-widget></chat-widget>
-                  {error ? <Error retryCallback={loadData} /> : null}
-                  <Summary global={data.Global} lastUpdate={data.Date} />
-                  <Countries countries={data.FilteredCountries} countryFilter={countryFilter} />
-                </React.Fragment>
-              );
-            }}
-          />
-          <Route path="/:slug" component={Country} />
+          <BrowserRouter>
+            <Route path='/'>
+              <div>
+                <Switch>
+                  <Route path="/coronatracker" exact
+                       render={() => {
+                        return (
+                          <React.Fragment>
+                            <chat-widget></chat-widget>
+                            {error ? <Error retryCallback={loadData} /> : null}
+                            <Summary global={data.Global} lastUpdate={data.Date} />
+                            <Countries countries={data.FilteredCountries} countryFilter={countryFilter} />
+                          </React.Fragment>
+                        );
+                      }}/>
+                   <Route path="/:slug" component={Country} />
+                </Switch>
+              </div>
+            </Route>
+          </BrowserRouter>
         </div>
       </LoadingContext.Provider>
       <Footer />
