@@ -1,0 +1,42 @@
+.countries {
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;  
+
+    .form-search {
+        position: relative;
+
+        svg {
+            position: absolute;
+            color: #999;
+            top: .6rem;
+            left: .8rem;
+        }
+        .search-input {
+            &::placeholder{
+                color: #999;
+            }
+            max-width: 18rem;
+
+            @media screen and (max-width: 800px) {
+                width: 15rem;
+            }
+
+            color: #555;
+            padding: .5rem 1rem;
+            font-size: 1rem;
+            font-weight: 500;
+            background-color: rgb(224, 224, 224);
+            border: none;
+            border-radius: 3px;
+            padding-left: 2.3rem;
+        }
+    }
+
+    .tip {
+        margin-top: -.2rem;
+        margin-bottom: -.5rem;
+        font-size: .7rem;
+        margin-left: 2.2rem;
+        color: #777;
+    }
+}
