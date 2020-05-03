@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter,Switch ,Route, withRouter } from 'react-router-dom';
+import { BrowserRouter, Switch, Route, withRouter } from 'react-router-dom';
 import { getSummaryStats } from './api';
 import Countries from './components/Countries/Countries';
 import Country from './components/Country/Country';
@@ -9,6 +9,7 @@ import Spinner from './components/Spinner/Spinner';
 import Summary from './components/Summary/Summary';
 import Error from './components/Error/Error';
 import './main.scss';
+let recievedMessage='';
 
 export const LoadingContext = React.createContext({
   loading: true,
@@ -17,8 +18,6 @@ export const LoadingContext = React.createContext({
 
 function App() {
   const [error, setError] = React.useState(false);
-  const [response, setResponse] = React.useState('We are working on your query');
-
 
   const [loading, setLoading] = React.useState(true);
   const value = { loading, setLoading };
@@ -61,10 +60,13 @@ function App() {
     });
   };
 
-  const handleEvent=()=>{
-    const chatWidget=document.querySelector('chat-widget');
+  const handleEvent = () => {
+    const chatWidget = document.querySelector('chat-widget');
     chatWidget.addEventListener('requestedMessage', (event) => {
-      setResponse(event.display);
+      if(recievedMessage !==event.detail){
+        recievedMessage=event.detail;
+        chatWidget.responseMessage=event.detail;
+      }
     })
   }
 
@@ -79,19 +81,18 @@ function App() {
               <div>
                 <Switch>
                   <Route path="/coronatracker" exact
-                       render={() => {
-                        return (
-                          <React.Fragment>
-                            {response}
-                            <chat-widget responseMessage={response} ref={handleEvent}
-                             ></chat-widget>
-                            {error ? <Error retryCallback={loadData} /> : null}
-                            <Summary global={data.Global} lastUpdate={data.Date} />
-                            <Countries countries={data.FilteredCountries} countryFilter={countryFilter} />
-                          </React.Fragment>
-                        );
-                      }}/>
-                   <Route path="/:slug" component={Country} />
+                    render={() => {
+                      return (
+                        <React.Fragment>
+                          <chat-widget ref={handleEvent}
+                          ></chat-widget>
+                          {error ? <Error retryCallback={loadData} /> : null}
+                          <Summary global={data.Global} lastUpdate={data.Date} />
+                          <Countries countries={data.FilteredCountries} countryFilter={countryFilter} />
+                        </React.Fragment>
+                      );
+                    }} />
+                  <Route path="/:slug" component={Country} />
                 </Switch>
               </div>
             </Route>
