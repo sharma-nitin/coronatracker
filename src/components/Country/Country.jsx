@@ -70,7 +70,7 @@ const Country = ({match: {params: { slug }}}) => {
     <React.Fragment>
       {error ? <Error retryCallback={fetchData} /> : null}
       <div className="country">
-        <Link to="/" className="go-back-link">
+        <Link to="/coronatracker" className="go-back-link">
           <FontAwesomeIcon icon={faArrowCircleLeft} />
           Back to Home
         </Link>

@@ -17,6 +17,8 @@ export const LoadingContext = React.createContext({
 
 function App() {
   const [error, setError] = React.useState(false);
+  const [response, setResponse] = React.useState('We are working on your query');
+
 
   const [loading, setLoading] = React.useState(true);
   const value = { loading, setLoading };
@@ -59,6 +61,13 @@ function App() {
     });
   };
 
+  const handleEvent=()=>{
+    const chatWidget=document.querySelector('chat-widget');
+    chatWidget.addEventListener('requestedMessage', (event) => {
+      setResponse(event.display);
+    })
+  }
+
   return (
     <React.Fragment>
       <Header />
@@ -73,7 +82,9 @@ function App() {
                        render={() => {
                         return (
                           <React.Fragment>
-                            <chat-widget></chat-widget>
+                            {response}
+                            <chat-widget responseMessage={response} ref={handleEvent}
+                             ></chat-widget>
                             {error ? <Error retryCallback={loadData} /> : null}
                             <Summary global={data.Global} lastUpdate={data.Date} />
                             <Countries countries={data.FilteredCountries} countryFilter={countryFilter} />
