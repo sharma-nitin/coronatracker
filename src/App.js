@@ -8,9 +8,11 @@ import Header from './layouts/Header';
 import Spinner from './components/Spinner/Spinner';
 import Summary from './components/Summary/Summary';
 import Error from './components/Error/Error';
+import { getZoneinfo } from '../src/api';
+
 import './main.scss';
 let recievedMessage='';
-
+let zoneinfo;
 export const LoadingContext = React.createContext({
   loading: true,
   setLoading: () => { },
@@ -49,6 +51,9 @@ function App() {
 
   React.useEffect(() => {
     loadData();
+    getZoneinfo().then(data=>{
+      zoneinfo=data.zones;
+    })
   }, []);
 
   const countryFilter = (e) => {
@@ -64,10 +69,33 @@ function App() {
     const chatWidget = document.querySelector('chat-widget');
     chatWidget.addEventListener('requestedMessage', (event) => {
       if(recievedMessage !==event.detail){
+        //api call to be made here and proper response to be returned in chatWidget.responseMessage
         recievedMessage=event.detail;
-        chatWidget.responseMessage=event.detail;
+        chatResponse(event.detail)
+       // chatWidget.responseMessage=event.detail;
       }
     })
+  }
+
+  const chatResponse=(message)=>{
+    const chatWidget = document.querySelector('chat-widget');
+    const ZoneValue = zoneinfo.filter((item) => {
+      if(item.district.replace(/\s/g, "").toLowerCase()===message.replace(/\s/g, "").toLowerCase()){
+        return item.zone
+      }
+    })
+    if(ZoneValue.length===1){
+      setTimeout(() => {
+        chatWidget.responseMessage= message + ' is in ' + ZoneValue[0].zone + ' zone.';
+      }, 1000)
+      setTimeout(() => {
+        chatWidget.responseMessage= 'Want to know for different city/district. Type city/district name below and i would be happy to assist. Thanks';
+      }, 1000)
+    } else{
+      setTimeout(() => {
+        chatWidget.responseMessage= 'No matching city found.Please type city name correctly.';
+      }, 1000)
+    }
   }
 
   return (

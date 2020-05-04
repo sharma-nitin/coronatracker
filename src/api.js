@@ -7,3 +7,9 @@ export async function getDayOneDataByCountry(slug, status) {
     const data = await fetch(`https://api.covid19api.com/total/dayone/country/${slug}/status/${status}`);
     return data.json();
 }
+
+
+export async function getZoneinfo() {
+    const data = await fetch(`https://api.covid19india.org/zones.json`);
+    return data.json();
+}
