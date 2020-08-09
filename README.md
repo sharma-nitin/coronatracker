@@ -1,7 +1,7 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ##Live Demo -
-https://sinister10.github.io/coronatracker/
+https://sharma-nitin.github.io/coronatracker/
 
 ## Available Scripts
 
